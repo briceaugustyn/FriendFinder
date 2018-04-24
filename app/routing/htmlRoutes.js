@@ -1,106 +1,34 @@
-var http = require("http");
-var fs = require('fs');
 
-var PORT = 8080;
+var express = require('express');
+var app = express();
+var path = require('path');
 
-var server = http.createServer(handleRequest);
 
-// Start our server
-server.listen(PORT, function () {
-    // Callback triggered when server is successfully listening. Hurray!
-    console.log("Server listening on: http://localhost:" + PORT);
+
+//viewed at http://localhost:8080
+app.get('/survey', function (req, res) {
+    res.sendFile('/Users/briceaugustyn/Code/W13/FriendFinder/app/public/Survey.html');
 });
 
-// Create a function which handles incoming requests and sends responses
-function handleRequest(req, res) {
+app.get('*', (req, res) => {
+    console.log('Catch all')
+    res.sendFile('/Users/briceaugustyn/Code/W13/FriendFinder/app/public/home.html')
+  })
 
-    // Capture the url the request is made to
-    var path = req.url;
 
-    // Depending on the URL, display a different HTML file.
-    switch (path) {
+//app.get('/', (req, res) => res.send('Hello world34'))
 
-        case "/":
-            return displayHome(path, req, res);
-
-        case "/Home":
-            return displayHome2(path, req, res);
-
-        case "/Survey":
-            return displaySurvey(path, req, res);
-
-        default:
-            return display404(path, req, res);
-    }
-}
+// app.get('/add', function (req, res) {
+//     res.sendFile(path.join(__dirname + '/add.html'));
+// });
+// app.get('/all', function (req, res) {
+//     res.sendFile(path.join(__dirname + '/all.html'));
+// });
+// app.get('/api/characters', function (req, res) {
+//     res.send(newdata);
+// });
 
 
 
-// When someone visits the "http://localhost:8080/" path, this function is run.
-function displayHome(url, req, res) {
-    
-    // fs.readFile('../public/home.html', function (err, data) {
-    //     res.writeHead(200, { 'Content-Type': 'text/html' });
-    //     res.write(data);
-    //     res.end();c
+app.listen(8080);
 
-    // })
-    var myHTML = "<html>" +
-        "<body><h1>Home Friend Fiender</h1>" +
-        "<ul>" +
-        "<li><a href='/Home'>Home</a></li>" +
-        "<li><a href='/Survey'>Survey</a></li>" +
-        "</ul>" +
-        "</body></html>";
-
-    // Configure the response to return a status code of 200 (meaning everything went OK), and to be an HTML document
-    res.writeHead(200, { "Content-Type": "text/html" });
-
-    // End the response by sending the client the myHTML string (which gets rendered as an HTML document thanks to the code above)
-    res.end(myHTML);
-}
-
-
-
-// When someone visits the "http://localhost:8080/" path, this function is run.
-function displayHome2(url, req, res) {
-    
-    fs.readFile('../public/home.html', function (err, data) {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(data);
-        res.end();
-
-    })
-}
-
-
-// When someone visits the "http://localhost:8080/portfolio" path, this function is run.
-function displaySurvey(url, req, res) {
-
-
-    fs.readFile('../public/survey.html', function (err, data) {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(data);
-        res.end();
-
-    })
-}
-
-
-
-
-
-
-// When someone visits any path that is not specifically defined, this function is run.
-function display404(url, req, res) {
-    var myHTML = "<html>" +
-        "<body><h1>404 Not Found </h1>" +
-        "<p>The page you were looking for: " + url + " can not be found</p>" +
-        "</body></html>";
-
-    // Configure the response to return a status code of 404 (meaning the page/resource asked for couldn't be found), and to be an HTML document
-    res.writeHead(404, { "Content-Type": "text/html" });
-
-    // End the response by sending the client the myHTML string (which gets rendered as an HTML document thanks to the code above)
-    res.end(myHTML);
-}
